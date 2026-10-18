@@ -300,6 +300,18 @@ def month_summary(year, month):
     return {k: tuple(v) for k, v in out.items()}
 
 
+def range_summary(start, end):
+    """{iso_date: (foods_eaten, workouts_done)} for start..end (date objects, inclusive)."""
+    a, b = start.isoformat(), end.isoformat()
+    out = {}
+    with closing(_conn()) as c:
+        for r in c.execute("SELECT day, COUNT(*) n FROM food_log WHERE day BETWEEN ? AND ? GROUP BY day", (a, b)):
+            out[r["day"]] = [r["n"], 0]
+        for r in c.execute("SELECT day, COUNT(*) n FROM workout_log WHERE day BETWEEN ? AND ? GROUP BY day", (a, b)):
+            out.setdefault(r["day"], [0, 0])[1] = r["n"]
+    return {k: tuple(v) for k, v in out.items()}
+
+
 def streak(today=None):
     """Consecutive days (ending today, or yesterday if today isn't done yet) with every food eaten."""
     today = today or date.today()
