@@ -1,0 +1,11 @@
+[project]
+name = "fittracker"
+version = "1.0.0"
+description = "Food checklist, calorie counter and custom workout tracker"
+requires-python = ">=3.10"
+dependencies = ["flet>=1.0.4"]
+
+[tool.flet]
+org = "com.ghost"
+product = "FitTracker"
+company = "Ghost"
